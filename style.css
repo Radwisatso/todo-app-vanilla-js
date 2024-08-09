@@ -1,0 +1,12 @@
+header {
+    text-align: center;
+}
+
+#todo-ul {
+    background-color: beige;
+}
+
+.dark {
+    background-color: rgb(73, 73, 73);
+    color: rgb(246, 246, 246);
+}
