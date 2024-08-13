@@ -53,30 +53,24 @@ function deleteTodo(id) {
 
 function addTodo(event) {
     event.preventDefault()
-    const formData = new FormData(todoForm)
+    // event.target || document.getElementById('todo-form')
+    const formData = new FormData(event.target)
     let todoName = formData.get('todoName') // event.target.todoName.value
 
-    let todoListUl = todoList.querySelector('ul')
-    todoListUl.setAttribute('id', 'todo-ul')
 
     let todos = JSON.parse(localStorage.getItem('todos')) // data yang lama
-    let newId = todos[todos.length - 1].id + 1
-    
-    let newTodo = document.createElement('li')
-    newTodo.innerHTML = `
-        <h4>${todoName}</h4>
-        <div>
-            <button>Edit</button>
-            <button onclick="deleteTodo(${newId})">Delete</button>
-        </div>
-    `
-    todoListUl.append(newTodo)
+    let newId;
+    if (todos.length > 0) {
+        newId = todos[todos.length - 1].id + 1
+    } else {
+        newId = 1
+    }
 
     // Save data nya
     todos.push({ id: newId, name: todoName }) // diperbaharui
     localStorage.setItem('todos', JSON.stringify(todos)) // timpa dengan yang baru
-
     todoForm.reset();
+    renderTodos()
 }
 
 todoForm.addEventListener('submit', addTodo)
