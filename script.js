@@ -2,25 +2,9 @@ const todoForm = document.getElementById('todo-form')
 const todoList = document.getElementById('todo-list')
 const themeButton = document.getElementById('theme-button')
 
-const initialTodos = [
-    {
-        id: 1,
-        name: "Drawing"
-    },
-    {
-        id: 2,
-        name: "Watching"
-    },
-]
-
 function renderTodos() {
-    let todoKey = localStorage.getItem('todos')
 
-    if (!todoKey) {
-        localStorage.setItem('todos', JSON.stringify(initialTodos))
-    }
-
-    let todos = JSON.parse(localStorage.getItem('todos'))
+    let todos = getTodos()
 
     todoList.querySelector('ul').innerText = null
 
@@ -29,7 +13,9 @@ function renderTodos() {
         newTodo.innerHTML = `
             <h4>${todos[i].name}</h4>
             <div>
-                <button>Edit</button>
+                <a href="./detail/detail.html?id=${todos[i].id}">
+                    <button>Edit</button>
+                </a>
                 <button onclick="deleteTodo(${todos[i].id})">Delete</button>
             </div>
         `
@@ -38,7 +24,7 @@ function renderTodos() {
 }
 
 function deleteTodo(id) {
-    let todos = JSON.parse(localStorage.getItem('todos'))
+    let todos = getTodos()
     let newTodos = []
 
     for (let i = 0; i < todos.length; i++) {
@@ -47,7 +33,7 @@ function deleteTodo(id) {
         }
     }
 
-    localStorage.setItem('todos', JSON.stringify(newTodos))
+    saveTodos(newTodos)
     renderTodos() // re-render ulang
 }
 
@@ -56,7 +42,6 @@ function addTodo(event) {
     // event.target || document.getElementById('todo-form')
     const formData = new FormData(event.target)
     let todoName = formData.get('todoName') // event.target.todoName.value
-
 
     let todos = JSON.parse(localStorage.getItem('todos')) // data yang lama
     let newId;
@@ -67,8 +52,7 @@ function addTodo(event) {
     }
 
     // Save data nya
-    todos.push({ id: newId, name: todoName }) // diperbaharui
-    localStorage.setItem('todos', JSON.stringify(todos)) // timpa dengan yang baru
+    pushTodo({ id: newId, name: todoName })
     todoForm.reset();
     renderTodos()
 }
